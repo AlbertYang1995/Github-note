@@ -339,9 +339,151 @@ public class Hero {
 
 接口是抽象类的延伸，java 为了保证数据安全规定不能多重继承，也就是说一个子类只能继承一个抽象类，但是一个子类可以实现多个接口，所以接口弥补了抽象类不能多重继承的缺陷。
 
-  
 
-  
+
+#### 数组
+
+##### 声明数组
+
+~~~java
+int[] arr;
+~~~
+
+##### 创建数组，要指明数组的长度
+
+~~~~java
+int[] arr;  // 声明一个引用
+arr = new int[5];  // 创建一个长度为5的整型数组，并且使用引用 a 指向该数组
+int[] arr = new int[5];  // 声明的同时，指向一个数组
+~~~~
+
+##### 数组长度
+
+~~~java
+int[] arr = new int[5];
+System.out.println(arr.length);  // 打印数组长度
+~~~
+
+##### 赋值
+
+~~~java
+// 方法一
+int[] arr1 = new int[]{101,102,103,104,105};
+// 方法二
+int[] arr2 = {101,102,103,104,105};
+// 错误方法
+int[] arr3 = new int[5]{101,102,103,104,105}  // 声明了数组长度则不能直接赋值
+~~~
+
+##### 遍历数组
+
+~~~java
+// 传统遍历
+int[] arr = {101,102,103,104,105};
+for(int i = 0; i < arr.length; i++) {
+    System.out.println(arr[i]);
+}
+// for each 方法 (只能够读取值，不能修改数组中的值)
+int arr = {101,102,103,104,105};
+for(int i : arr) {
+    System.out.println(i);
+}
+~~~
+
+##### 复制数组
+
+~~~java
+int a [] = new int[]{101,102,103,104,105};      
+int b[] = new int[3];  // 分配了长度是3的空间，但是没有赋值       
+//通过数组赋值把，a数组的前3位赋值到b数组  
+//方法一： for循环
+for (int i = 0; i < b.length; i++) {
+    b[i] = a[i];
+}
+        
+//方法二: System.arraycopy(src, srcPos, dest, destPos, length)
+//src: 源数组
+//srcPos: 从源数组复制数据的起始位置
+//dest: 目标数组
+//destPos: 复制到目标数组的启始位置
+//length: 复制的长度       
+System.arraycopy(a, 0, b, 0, 3);
+
+import java.util.Arrays;
+int[] a = new int[]{101,102,103,104,105};
+int[] b = Arrays.copyOfRange(a, 0, 3); 
+// copyOfRange(int[] original, int from, int to)
+// 第一个参数表示源数组
+// 第二个参数表示开始位置(取得到)
+// 第三个参数表示结束位置(取不到)
+~~~
+
+##### 转换为字符串
+
+~~~java
+int a[] = new int[] { 18, 62, 68, 82, 65, 9 };
+String content = Arrays.toString(a);
+System.out.println(content);
+~~~
+
+##### 排序
+
+~~~java
+import java.util.Arrays;
+int[] a = new int[]{101,102,103,104,105};
+Arrays.sort(a);
+~~~
+
+##### 判断两个数组是否相同
+
+~~~java
+import java.util.Arrays;
+int a[] = {101,102,103,104,105};
+int b[] = {101,102,103,104,105};
+System.out.println(Arrays.equals(a, b));
+~~~
+
+##### 填充
+
+~~~java
+import java.util.Arrays;
+int[] a = new int[10];
+Arrays.fill(a, 5);
+~~~
+
+##### 二维数组
+
+~~~java
+int[][] a = new int[2][3]; //有两个一维数组，每个一维数组的长度是3
+a[1][2] = 5;  //可以直接访问一维数组，因为已经分配了空间
+          
+//只分配了二维数组
+int[][] b = new int[2][]; //有两个一维数组，每个一维数组的长度暂未分配
+b[0]  =new int[3]; //必须事先分配长度，才可以访问
+b[0][2] = 5;
+        
+//指定内容的同时，分配空间
+int[][] c = new int[][]{
+    {1,2,4},
+    {4,5},
+    {6,7,8,9}
+};
+// 遍历二维数组
+for (int i = 0; i < arr.length; i++) {
+    for (int j = 0; j < arr[0].length; j++) {
+        System.out.println(arr[i][j]);
+    }
+}
+~~~
+
+
+
+#### 集合框架
+
+##### 数组
+
+- 下标从0开始
+- indexOf获取不到的对象表示为-1
 
   
 
