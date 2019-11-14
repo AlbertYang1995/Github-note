@@ -421,7 +421,7 @@ int[] b = Arrays.copyOfRange(a, 0, 3);
 ##### 转换为字符串
 
 ~~~java
-int a[] = new int[] { 18, 62, 68, 82, 65, 9 };
+int[] a = new int[] { 18, 62, 68, 82, 65, 9 };
 String content = Arrays.toString(a);
 System.out.println(content);
 ~~~
@@ -438,8 +438,8 @@ Arrays.sort(a);
 
 ~~~java
 import java.util.Arrays;
-int a[] = {101,102,103,104,105};
-int b[] = {101,102,103,104,105};
+int[] a = {101,102,103,104,105};
+int[] b = {101,102,103,104,105};
 System.out.println(Arrays.equals(a, b));
 ~~~
 
@@ -478,27 +478,96 @@ for (int i = 0; i < arr.length; i++) {
 
 
 
-#### 集合框架
+#### ArrayList
 
-##### 数组
+- 声明
 
-- 下标从0开始
-- indexOf获取不到的对象表示为-1
+  ~~~~java
+  import java.util.ArrayList;
+  ArrayList heros = new ArrayList();
+  ~~~~
+
+- 增加
+
+  ~~~java
+  import java.util.ArrayList;
+  ArrayList heros = new ArrayList();
+  heros.add(new Hero("盖伦"))；
+  Hero specialHero = new Hero("special hero");
+  heros.add(3, specialHero);
+  ~~~
+
+- 判断一个对象是否存在容器中
+
+  ~~~java
+  System.out.println(heros.contains(specialHero));
+  ~~~
+
+- 获取指定位置的对象
+
+  ~~~java
+  System.out.println(heros.get(5));
+  ~~~
+
+- 获取对象所处位置
+
+  ~~~java
+  System.out.println(heros.indexOf(specialHero));
+  ~~~
+
+- 删除对象
+
+  ~~~java
+  heros.remove(2);
+  heros.remove(specialHero);
+  ~~~
+
+- 替换对象
+
+  ~~~java
+  heros.set(5, new Hero("提莫"));
+  ~~~
+
+- 获取ArrayList大小
+
+  ~~~java
+  System.out.println(heros.size());
+  ~~~
+
+- ArrayList转换为数组
+
+  ~~~java
+  ArrayList heros = new ArrayList();
+  Hero[] hs = (Hero[])heros.toArray(new Hero[]{});
+  ~~~
+
+- 把另一个容器所有对象加进来
+
+  ~~~java
+  ArrayList heros = new ArrayList();
+  ArrayList anotherHeros = new ArrayList();
+  heros.addAll(anotherHeros);
+  ~~~
+
+- 清空ArrayList
+
+  ~~~java
+  heros.clear();
+  ~~~
 
   
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
 
-  
+
+
+
+
+
+
+
