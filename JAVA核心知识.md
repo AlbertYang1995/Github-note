@@ -393,22 +393,23 @@ for(int i : arr) {
 ##### 复制数组
 
 ~~~java
-int a [] = new int[]{101,102,103,104,105};      
-int b[] = new int[3];  // 分配了长度是3的空间，但是没有赋值       
-//通过数组赋值把，a数组的前3位赋值到b数组  
-//方法一： for循环
+int[] a = new int[]{101,102,103,104,105};      
+int[] b = new int[3];  // 分配了长度是3的空间，但是没有赋值       
+// 通过数组赋值把，a数组的前3位赋值到b数组  
+// 方法一： for循环
 for (int i = 0; i < b.length; i++) {
     b[i] = a[i];
 }
         
-//方法二: System.arraycopy(src, srcPos, dest, destPos, length)
-//src: 源数组
-//srcPos: 从源数组复制数据的起始位置
-//dest: 目标数组
-//destPos: 复制到目标数组的启始位置
-//length: 复制的长度       
+// 方法二: System.arraycopy(src, srcPos, dest, destPos, length)
+// src: 源数组
+// srcPos: 从源数组复制数据的起始位置
+// dest: 目标数组
+// destPos: 复制到目标数组的启始位置
+// length: 复制的长度       
 System.arraycopy(a, 0, b, 0, 3);
 
+// 方法三
 import java.util.Arrays;
 int[] a = new int[]{101,102,103,104,105};
 int[] b = Arrays.copyOfRange(a, 0, 3); 
@@ -421,7 +422,8 @@ int[] b = Arrays.copyOfRange(a, 0, 3);
 ##### 转换为字符串
 
 ~~~java
-int[] a = new int[] { 18, 62, 68, 82, 65, 9 };
+import java.util.Arrays;
+int[] a = new int[]{ 18, 62, 68, 82, 65, 9 };
 String content = Arrays.toString(a);
 System.out.println(content);
 ~~~
@@ -555,7 +557,62 @@ for (int i = 0; i < arr.length; i++) {
   heros.clear();
   ~~~
 
+- 实现了接口List
+
+  ~~~java
+  import java.util.ArrayList;
+  import java.util.List;
+  // ArrayList实现了接口List
+  // 接口引用指向子类对象(多态)
+  List heros = new ArrayList();
+  heros.add(new Hero("盖伦"));
+  ~~~
+
+- 在ArrayList上使用泛型
+
+  ~~~java
+  // 引入泛型Generic
+  // 声明容器的时候，就指定了这种容器，只能放Hero或者Hero的子类，放其他的就会出错
+  List<Hero> genericheros = new ArrayList<Hero>();
+  genericheros.add(new Hero("盖伦"));
+  ~~~
+
+- 遍历ArrayList
+
+  ~~~java
+  // 第一种 使用for循环
+  for (int i = 0; i < heros.size(); i++) {
+      Hero h = heros.get(i);
+      System.out.println(h);
+  }
   
+  // 第二种 使用迭代器
+  Iterator<Hero> it= heros.iterator();
+  // 迭代器的while写法
+  // 从最开始的位置判断"下一个"位置是否有数据
+  // 如果有就通过next取出来，并且把指针向下移动
+  // 直到"下一个"位置没有数据
+  while(it.hasNext()){
+      Hero h = it.next();
+      System.out.println(h);
+  }
+  // 迭代器的for写法
+  for (Iterator<Hero> iterator = heros.iterator(); iterator.hasNext();) {
+      Hero hero = (Hero) iterator.next();
+      System.out.println(hero);
+  }
+  
+  // 第三种 使用增强型for循环
+  for (Hero h : heros) {
+      System.out.println(h);
+  }
+  ~~~
+
+
+
+#### LinkedList
+
+
 
 
 
