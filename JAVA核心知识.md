@@ -612,6 +612,87 @@ for (int i = 0; i < arr.length; i++) {
 
 #### LinkedList
 
+- 双向链表
+
+  ~~~java
+  import java.util.LinkedList;
+  // LinkedList 是一个双向链表结构的 list
+  LinkedList<Hero> ll = new LinkedList<Hero>();
+  // 可以很方便的在头部和尾部插入数据
+  ll.addFirst(new Hero("盖伦"));
+  ll.addLast(new Hero("提莫"));
+  // 查看最前面和最后面的数据
+  ll.getFirst();
+  ll.getLast();
+  // 取出最前面和最后面的数据
+  ll.removeFirst();
+  ll.removeLast();
+  ~~~
+
+- 队列
+
+  ~~~java
+  import java.util.LinkedList;
+  import java.util.Queue;
+  Queue<Hero> q = new LinkedList<Hero>();
+  // 加在队列的最后面
+  q.offer(new Hero("盖伦"));
+  // 取出第一个元素
+  Hero h = q.poll();
+  // 查看第一个元素
+  Hero h = q.peek();
+  ~~~
+
+- 栈
+
+  ~~~java
+  import java.util.LinkedList;
+  LinkedList<Hero> heros = new LinkedList<Hero>();
+  Hero h = new Hero("盖伦")；
+  heros.addLast(h);
+  heros.removeLast(h);
+  heros.getLast(h);
+  ~~~
+
+
+
+#### HashMap
+
+~~~java
+import java.util.HashMap;
+HashMap<String, String> dictionary = new HashMap<String, String>();
+dictionary.put("adc", "jinx");
+
+// key是唯一的，值可以不唯一
+HashMap<String, Hero> heroMap = new HashMap<>();
+Hero gareen = new Hero("gareen");
+heroMap.put("hero1", gareen);
+heroMap.put("hero2", gareen);s
+~~~
+
+
+
+#### HashSet
+
+~~~java
+import java.util.HashSet;
+HashSet<Integer> numbers = new HashSet<String>();
+numbers.add(4);  // set 中没有顺序
+// 两种遍历方式
+// 使用迭代器iterator
+for (Iterator<Integer> iterator = numbers.iterator(); iterator.hasNext();) {
+    Integer i = (Integer) iterator.next();
+}
+// 使用增强型for循环
+for (Integer i : numbers) {
+    System.out.println(i);
+}
+~~~
+
+
+
+
+
 
 
 
