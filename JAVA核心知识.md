@@ -4,13 +4,11 @@
 Hero h = new Hero();
 ~~~
 
-new Hero 代表创建了一个Hero对象
+- new Hero 代表创建了一个Hero对象
 
-h这个变量是Hero类型，又叫做引用
+  h这个变量是Hero类型，又叫做引用
 
-
-
-可以同时有多个引用指向同一个对象
+- 可以同时有多个引用指向同一个对象
 
 ~~~java
 //使用一个引用来指向这个对象
@@ -44,13 +42,96 @@ public class Weapon extends Item{
 }
 ~~~
 
+- 访问修饰符
+
+|           | 自身 | 同包子类 | 不同包子类 | 同包类 | 其他类 |
+| :-------: | :--: | :------: | :--------: | :----: | :----: |
+|  private  | 访问 |          |            |        |        |
+|  package  | 访问 |   继承   |            |  访问  |        |
+| protected | 访问 |   继承   |    继承    |  访问  |        |
+|  public   | 访问 |   继承   |    继承    |  访问  |  访问  |
+
+- 什么情况该用什么修饰符呢：
+  - 属性通常用private封装
+  - 方法一般使用public方便调用
+  - 会被子类继承的方法，通常使用protected
+
+
+
+#### 转型
+
+所谓的转型，是指当**引用类型**和**对象类型**不一致的时候，才需要进行类型转换
+
+- 向上转型（子类转父类）
+
+~~~java
+Person p = new Student();
+~~~
+
+因为`Student`继承自`Person`，因此，它拥有`Person`的全部功能。`Person`类型的变量，如果指向`Student`类型的实例，对它进行操作，是没有问题的！
+
+- 向下转型（父类转子类）
+
+~~~java
+Hero h = new ADHero();
+ADHero ad = new ADHero();
+ad = (ADHero)h;
+~~~
+
+子类转父类需要强制转换，有时候行，有时候不行
+
+**当父类引用的实际对象是子类时，强制转换可行**
+
+- instanceof
+
+~~~java
+//判断引用h1指向的对象，是否是ADHero类型
+System.out.println(h1 instanceof ADHero);
+         
+//判断引用h2指向的对象，是否是APHero类型
+System.out.println(h2 instanceof APHero);
+         
+//判断引用h1指向的对象，是否是Hero的子类型
+System.out.println(h1 instanceof Hero);
+~~~
+
 
 
 #### 构造方法
 
-- 仅当类没有提供任何构造器的时候，系统才会提供一个默认的构造器
+~~~java
+class Person {
+    public Person() {
+        
+    }
+}
+~~~
 
-- 在方法重载中，返回类型并不是方法签名的一部分。也就是说，不能有两个名字相同、参数类型也相同，返回类型却不同的方法
+- 作用：在创建对象实例时就把内部字段全部初始化为合适的值
+
+- 构造方法的名称就是类名。构造方法的参数没有限制，在方法内部，也可以编写任意语句。但是，和普通方法相比，构造方法没有返回值（也没有`void`），调用构造方法，必须用`new`操作符。
+
+- 仅当类没有提供任何构造方法的时候，系统才会提供一个默认的构造方法
+
+- 构造方法可以重载
+
+- 在方法重载中，返回类型并不是方法签名的一部分。也就是说，不能有两个名字相同、参数类型也相同，返回类型却不同的方法，重载方法的返回值类型应该相同
+
+- 初始化优先级：先对字段进行初始化，然后使用初始化块进行初始化，最后在构造方法中对字段进行初始化
+
+  ~~~java
+  class Person {
+      private String name = "Unamed";
+      private int age = 10;
+  
+      public Person(String name, int age) {
+          this.name = name;
+          this.age = age;
+      }
+  }
+  ~~~
+  
+- 可以通过`this`在一个构造方法内部调用另一个构造方法
 
 
 
@@ -116,6 +197,22 @@ public class Weapon extends Item{
   	// doesn't work
   }
   ~~~
+
+
+
+#### 可变参数
+
+~~~java
+class Group {
+    private String[] names;
+    public void setNames(String... names) {
+        this.names = names;
+    }
+}
+Group g = new Group();
+g.setNames("Xiao Ming", "Xiao Hong", "Xiao Jun");
+g.setNames("Xiao Ming");
+~~~
 
 
 
@@ -225,7 +322,7 @@ public class Hero {
       float maxHP;
        
       //物品栏的容量
-      public static int itemCapacity=8; //声明的时候 初始化
+      public static int itemCapacity = 8; //声明的时候 初始化
        
       static{
           itemCapacity = 6;//静态初始化块 初始化
@@ -237,7 +334,7 @@ public class Hero {
   }
   ~~~
 
-  ***注***：构造器初始化优先级大于初始化块
+  ***注***：构造器初始化优先级大于初始化块大于属性声明
 
   
 #### 关键字super
@@ -256,6 +353,37 @@ public class Hero {
       }
   }
   ```
+
+  - 如果父类没有默认的构造方法，子类就必须显式调用`super()`并给出参数以便让编译器定位到父类的一个合适的构造方法
+
+  ~~~java
+  public class Main {
+      public static void main(String[] args) {
+          Student s = new Student("Xiao Ming", 12, 89);
+      }
+  }
+  
+  class Person {
+      protected String name;
+      protected int age;
+  
+      public Person(String name, int age) {
+          this.name = name;
+          this.age = age;
+      }
+  }
+  
+  class Student extends Person {
+      protected int score;
+  
+      public Student(String name, int age, int score) {
+          super(name, age); // 调用父类的构造方法Person(String, int)
+          this.score = score;
+      }
+  }
+  ~~~
+
+  - 这里还顺带引出了另一个问题：即子类**不会继承**任何父类的构造方法。子类默认的构造方法是编译器自动生成的，不是继承的
 
 - 调用父类属性
 
@@ -353,7 +481,7 @@ int[] arr;
 
 ~~~~java
 int[] arr;  // 声明一个引用
-arr = new int[5];  // 创建一个长度为5的整型数组，并且使用引用 a 指向该数组
+arr = new int[5];  // 创建一个长度为5的整型数组，并且使用引用 arr 指向该数组
 int[] arr = new int[5];  // 声明的同时，指向一个数组
 ~~~~
 
@@ -587,7 +715,7 @@ for (int i = 0; i < arr.length; i++) {
   }
   
   // 第二种 使用迭代器
-  Iterator<Hero> it= heros.iterator();
+  Iterator<Hero> it = heros.iterator();
   // 迭代器的while写法
   // 从最开始的位置判断"下一个"位置是否有数据
   // 如果有就通过next取出来，并且把指针向下移动
@@ -667,7 +795,14 @@ dictionary.put("adc", "jinx");
 HashMap<String, Hero> heroMap = new HashMap<>();
 Hero gareen = new Hero("gareen");
 heroMap.put("hero1", gareen);
-heroMap.put("hero2", gareen);s
+heroMap.put("hero2", gareen);
+
+// 获取Map长度
+dictionary.length
+// 询问是否包含某一Key
+dictionary.containsKey()
+// 取得某一Key对应的键值
+dictionary.get()
 ~~~
 
 
@@ -688,6 +823,10 @@ for (Integer i : numbers) {
     System.out.println(i);
 }
 ~~~
+
+
+
+#### 泛型
 
 
 
