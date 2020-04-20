@@ -55,6 +55,11 @@ public class Weapon extends Item{
   - 属性通常用private封装
   - 方法一般使用public方便调用
   - 会被子类继承的方法，通常使用protected
+- 定义为`public`的`class`、`interface`可以被其他任何类访问
+- 定义为`public`的`field`、`method`可以被其他类访问，前提是首先有访问该类的权限
+- 定义为`private`的`field`、`method`无法被其他类访问，推荐把`private`方法放到`public`方法后面
+- `protected`作用于继承关系。定义为`protected`的字段和方法可以被子类访问，以及子类的子类
+- 一个`.java`文件只能包含一个`public`类，但可以包含多个非`public`类。如果有`public`类，文件名必须和`public`类的名字相同
 
 
 
@@ -336,7 +341,56 @@ public class Hero {
 
   ***注***：构造器初始化优先级大于初始化块大于属性声明
 
-  
+
+
+
+#### 多态
+
+多态是指，针对某个类型的方法调用，其真正执行的方法取决于运行时期实际类型的方法。
+
+类的多态的条件：
+
+- 父类（接口）引用指向子类对象
+- 调用的方法有重写
+
+~~~java
+public class Item {
+    String name;
+    int price;
+
+    public void effect() {
+        System.out.println("物品使用后，可以有效果 ");
+    }
+     
+    public static void main(String[] args) {
+        Item i1= new LifePotion();
+        Item i2 = new MagicPotion();
+        i1.effect();
+        i2.effect();
+    }
+}
+ 
+public class LifePotion extends Item {
+    @override
+    public void effect(){
+        System.out.println("血瓶使用后，可以回血");
+    }
+}
+ 
+public class MagicPotion extends Item{
+ 	@override
+    public void effect(){
+        System.out.println("蓝瓶使用后，可以回魔法");
+    }
+}
+~~~
+
+**TIPS**：虽然引用类型都为`Item`，但是对象类型分别为`Item`的子类`LifePotion`和`MagicPotion`
+
+​			调用`effect`函数时，分别调用各子类的重写函数
+
+
+
 #### 关键字super
 
 - 子类显式调用父类带参构造方法
@@ -451,21 +505,55 @@ public class Hero {
 
 抽象类体现了数据抽象的思想，是实现多态的一种机制，它的作用就是在于继承。
 
-使用抽象类时需要注意以下几点：
-
-- 抽象类不能被实例化，实例化由它的子类来完成
-- 抽象方法必须由子类来重写
-- 只要包含一个抽象方法的类，必须定义为抽象类
-- 抽象类中也可以包含具体方法，甚至可以不包含抽象方法
-- 子类中的抽象方法不能和父类的抽象方法同名
-- abstract 和 final 不能同时修饰一个类
-- abstract 不能和 private, static, final, native 同时修饰一个方法
+- 使用抽象类时需要注意以下几点：
+  - 抽象类不能被实例化，实例化由它的子类来完成
+  - 抽象方法必须由子类来重写
+  - 只要包含一个抽象方法的类，必须定义为抽象类
+  - 抽象类中也可以包含具体方法，甚至可以不包含抽象方法
+  - 子类中的抽象方法不能和父类的抽象方法同名
+  - abstract 和 final 不能同时修饰一个类
+  - abstract 不能和 private, static, final, native 同时修饰一个方法
+- 面向抽象编程：引用高层类型，避免引用实际子类型的方式
+  - 上层代码只定义规范
+  - 不需要子类就可以实现业务逻辑（正常编译）
+  - 具体的业务逻辑由不同的子类实现，调用者并不关心
 
 
 
 #### 接口
 
-接口是抽象类的延伸，java 为了保证数据安全规定不能多重继承，也就是说一个子类只能继承一个抽象类，但是一个子类可以实现多个接口，所以接口弥补了抽象类不能多重继承的缺陷。
+- 接口是抽象类的延伸，java 为了保证数据安全规定不能多重继承，也就是说一个子类只能继承一个抽象类，但是一个子类可以实现多个接口，所以接口弥补了抽象类不能多重继承的缺陷。
+- 接口定义的所有方法默认都是`public abstract`的，所以这两个修饰符不需要写出来（写不写效果都一样）。
+- 一个类可以同时`implement`多个`interface`，接口中不能有实例字段，可以定义`default`方法
+
+~~~java
+class Student implements Person, Hello { // 实现了两个interface
+    ...
+}
+~~~
+
+- 一个`interface`可以继承自另一个`interface`，相当于拓展了接口的方法
+
+~~~java
+interface Hello {
+    void hello();
+}
+
+interface Person extends Hello {
+    void run();
+    String getName();
+}
+~~~
+
+- 实现类可以不必覆写`default`方法。`default`方法的目的是，当我们需要给接口新增一个方法时，会涉及到修改全部子类。如果新增的是`default`方法，那么子类就不必全部修改，只需要在需要覆写的地方去覆写新增方法。
+- `default`方法和抽象类的普通方法是有所不同的。因为`interface`没有字段，`default`方法无法访问字段，而抽象类的普通方法可以访问实例字段。
+- 接口中可以定义静态字段，并且`interface`中的字段必须是`public static final`类型
+
+
+
+#### 集合
+
+
 
 
 
