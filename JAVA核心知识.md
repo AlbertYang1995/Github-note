@@ -551,12 +551,6 @@ interface Person extends Hello {
 
 
 
-#### 集合
-
-
-
-
-
 #### 数组
 
 ##### 声明数组
@@ -696,7 +690,11 @@ for (int i = 0; i < arr.length; i++) {
 
 
 
-#### ArrayList
+#### 集合
+
+![TIM图片20200422132444.png](http://ww1.sinaimg.cn/large/bc48dba3gy1ge2h8u9eknj20in0940uh.jpg)
+
+##### ArrayList
 
 - 声明
 
@@ -710,8 +708,10 @@ for (int i = 0; i < arr.length; i++) {
   ~~~java
   import java.util.ArrayList;
   ArrayList heros = new ArrayList();
+  // 添加在末尾
   heros.add(new Hero("盖伦"))；
   Hero specialHero = new Hero("special hero");
+  // 添加在指定位置
   heros.add(3, specialHero);
   ~~~
 
@@ -824,9 +824,7 @@ for (int i = 0; i < arr.length; i++) {
   }
   ~~~
 
-
-
-#### LinkedList
+##### LinkedList
 
 - 双向链表
 
@@ -843,6 +841,8 @@ for (int i = 0; i < arr.length; i++) {
   // 取出最前面和最后面的数据
   ll.removeFirst();
   ll.removeLast();
+  // 替换目标处元素
+  ll.set(5, new Hero("提莫"))；
   ~~~
 
 - 队列
@@ -865,14 +865,15 @@ for (int i = 0; i < arr.length; i++) {
   import java.util.LinkedList;
   LinkedList<Hero> heros = new LinkedList<Hero>();
   Hero h = new Hero("盖伦")；
+  // 压栈
   heros.addLast(h);
+  // 弹栈
   heros.removeLast(h);
+  // 查看栈顶元素
   heros.getLast(h);
   ~~~
 
-
-
-#### HashMap
+##### HashMap
 
 ~~~java
 import java.util.HashMap;
@@ -891,11 +892,11 @@ dictionary.length
 dictionary.containsKey()
 // 取得某一Key对应的键值
 dictionary.get()
+// 删除某一key对应键值
+dictionary.remove()
 ~~~
 
-
-
-#### HashSet
+##### HashSet
 
 ~~~java
 import java.util.HashSet;
@@ -914,9 +915,210 @@ for (Integer i : numbers) {
 
 
 
-#### 泛型
+#### Java DataBase Connectivity
 
+- 打开MySQL服务器命令
 
+  mysql -u root -p
+
+- 使用Java程序访问数据库时，Java代码并不是直接通过TCP连接去访问数据库，而是通过JDBC接口来访问，而JDBC接口则通过JDBC驱动来实现真正对数据库的访问
+
+![图片1.png](http://ww1.sinaimg.cn/large/bc48dba3gy1gd0qbepjj6j207g085q2u.jpg)
+
+- 例如，我们在Java代码中如果要访问**MySQL**，那么必须编写代码操作**JDBC**接口，**JDBC**接口是**Java**标准库自带的，所以可以直接编译。而具体的**JDBC**驱动是由数据库厂商提供的，因此，访问某个具体的数据库，我们只需引入该厂商提供的**JDBC**驱动，就可以通过**JDBC**接口来访问。这样保证了**Java**程序编写的是一套数据库访问代码 ，却可以访问不同的数据库，因为他们都提供了标准的**JDBC**驱动
+
+![图片2.png](http://ww1.sinaimg.cn/large/bc48dba3gy1gd0qbq58bej207u08d3yf.jpg)
+
+- 从代码来看，Java标准库自带的JDBC接口其实就是定义了一组接口，而某个具体的JDBC驱动其实就是实现了这些接口的类
+
+![图片3.png](http://ww1.sinaimg.cn/large/bc48dba3gy1gd0qbu26i2j20at06mjra.jpg)
+
+- 实际上，一个MySQL的JDBC的驱动就是一个jar包，它本身也是纯Java编写的。我们自己编写的代码只需要引用Java标准库提供的java.sql包下面的相关接口，由此再间接地通过MySQL驱动的jar包通过网络访问MySQL服务器，所有复杂的网络通讯都被封装到JDBC驱动中，因此，Java程序本身**只需要引入一个MySQL驱动的jar包**就可以正常访问MySQL服务器。
+
+- 使用JDBC的好处是：
+  - 各数据库厂商使用相同的接口，Java代码不需要针对不同数据库分别开发
+  - Java程序编译器仅依赖java.sql包，不依赖具体数据库的jar包
+  - 可随时替换底层数据库，访问数据库的Java代码基本不变
+
+##### JDBC连接
+
+Connection代表一个JDBC连接，它相当于Java程序到数据库的连接（通常是TCP连接）
+
+打开一个Connection时，需要准备URL、用户名以及口令才能成功连接到数据库
+
+- URL是由数据库厂商定义的格式
+
+  ~~~java
+  jdbc:mysql://<hostname>:<port>/<db>?key1=value1&key2=value2
+  ~~~
+
+- 数据库连接示例
+
+  ~~~java
+  // JDBC连接的URL, 不同数据库有不同的格式:
+  String JDBC_URL = "jdbc:mysql://localhost:3306/test";
+  String JDBC_USER = "root";
+  String JDBC_PASSWORD = "password";
+  // 获取连接:
+  Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD);
+  // TODO: 访问数据库...
+  // 关闭连接:
+  conn.close();
+  ~~~
+
+##### JDBC查询
+
+- 通过<code>Connection</code>提供的<code>createStatement()</code>方法创建一个<code>Statement</code>对象，用于执行一个查询；
+- 执行<code>Statement</code>对象提供的<code>executeQuery("SELECT * FROM students")</code>并传入SQL语句，执行查询并获得返回的结果集，使用<code>ResultSet</code>来引用这个结果集
+- 反复调用<code>ResultSet</code>的<code>next()</code>方法并读取每一行结果
+
+~~~java
+try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD) {
+    try (Statement stmt = conn.createStatement()) {
+        try (ResultSet rs = stmt.executeQuery("SELECT id, grade, name, gender FROM students WHERE gender=\'M\'")) {
+            while (rs.next()) {
+                long id = rs.getLong(1); // 注意：索引从1开始
+                long grade = rs.getLong(2);
+                String name = rs.getString(3);
+                String gender = rs.getString(4);
+            }
+        }
+    }
+}
+~~~
+
+TIPS：
+
+- <code>Statement</code>和<code>ResultSet</code>都是需要关闭的资源，因此嵌套使用<code>try (resource)</code>确保及时关闭；
+- <code>rs.next()</code>用于判断是否有下一行记录，如果有，将自动把当前行移动到下一行（一开始获得<code>ResultSet</code>时当前行不是第一行）
+- <code>ResultSet</code>获取列时，索引从**1**开始而不是**0**
+- 必须根据<code>SELECT</code>的列的对应位置来调用<code>getLong(1)</code>，<code>getString(2)</code>这些方法，否则对应位置的数据类型不对，将报错
+
+- 使用<code>PreparedStatement</code>避免SQL注入问题
+
+~~~java
+try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD) {
+    try (PreparedStatement ps = conn.prepareStatement("SELECT id, grade, name, gender FROM students WHERE gender=? AND grade=?")) {
+        ps.setObject(1, "M"); // 注意：索引从1开始
+        ps.setObject(2, 3);
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                long grade = rs.getLong("grade");
+                String name = rs.getString("name");
+                String gender = rs.getString("gender");
+            }
+        }
+    }
+}
+~~~
+
+TIPS：
+
+- 必须调用<code>setObject()</code>设置每个占位符<code>?</code>的值
+- 从<code>ResultSet</code>读取列时，使用<code>String</code>类型的列名比索引要易读，不易出错
+
+##### JDBC更新
+
+增删改查 CRUD
+
+Create Retrieve Update Delete
+
+- 插入
+
+~~~java
+try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD) {
+    try (PreparedStatement ps = conn.prepareStatement(
+            "INSERT INTO students (id, grade, name, gender) VALUES (?,?,?,?)")) {
+        ps.setObject(1, 999); // 注意：索引从1开始
+        ps.setObject(2, 1); // grade
+        ps.setObject(3, "Bob"); // name
+        ps.setObject(4, "M"); // gender
+        int n = ps.executeUpdate(); // 表示插入记录的数目，always = 1
+    }
+}
+~~~
+
+- 更新
+
+~~~java
+try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD) {
+    try (PreparedStatement ps = conn.prepareStatement("UPDATE students SET name=? WHERE id=?")) {
+        ps.setObject(1, "Bob"); // 注意：索引从1开始
+        ps.setObject(2, 999);
+        int n = ps.executeUpdate(); // 返回更新的行数(0或者正数)
+    }
+}
+~~~
+
+- 删除
+
+~~~java
+try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD) {
+    try (PreparedStatement ps = conn.prepareStatement("DELETE FROM students WHERE id=?")) {
+        ps.setObject(1, 999); // 注意：索引从1开始
+        int n = ps.executeUpdate(); // 删除的行数
+    }
+}
+~~~
+
+<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code>都视为更新操作
+
+更新操作使用<code>PrepareStatement</code>的<code>executeUpdate()</code>，返回受影响的行数
+
+##### JDBC事务
+
+~~~java
+Connection conn = openConnection();
+try {
+    // 关闭自动提交:
+    conn.setAutoCommit(false);
+    // 执行多条SQL语句:
+    insert(); update(); delete();
+    // 提交事务:
+    conn.commit();
+} catch (SQLException e) {
+    // 回滚事务:
+    conn.rollback();
+} finally {
+    conn.setAutoCommit(true);
+    conn.close();
+}
+~~~
+
+- 默认情况下，我们获取到<code>Connection</code>连接之后，总是处于“自动提交”模式
+
+##### JDBC Batch
+
+同一个SQL但参数不同的若干次操作合并为一次**Batch**执行
+
+~~~java
+try (PreparedStatement ps = conn.prepareStatement("INSERT INTO students (name, gender, grade, score) VALUES (?, ?, ?, ?)")) {
+    // 对同一个PreparedStatement反复设置参数并调用addBatch():
+    for (String name : names) {
+        ps.setString(1, name);
+        ps.setBoolean(2, gender);
+        ps.setInt(3, grade);
+        ps.setInt(4, score);
+        ps.addBatch(); // 添加到batch
+    }
+    // 执行batch:
+    int[] ns = ps.executeBatch();
+    for (int n : ns) {
+        System.out.println(n + " inserted."); // batch中每个SQL执行的结果数量
+    }
+}
+~~~
+
+##### JDBC连接池
+
+如果每一次操作都来一次打开连接，操作，关闭连接，那么创建和销毁JDBC连接的开销就太大了。为了避免频繁地创建和销毁JDBC连接，我们可以通过连接池（Connection Pool）复用已经创建好的连接。
+
+~~~java
+try (Connection conn = ds.getConnection()) { // 在此获取连接
+    ...
+} // 在此“关闭”连接
+~~~
 
 
 
